@@ -1,0 +1,81 @@
+/*
+ Theme Name: Find My job
+ Author: Audrey
+ Version: 1.0
+*/
+
+
+/* Customize Login Screen */
+
+body.login .button-primary {
+    background-color: #F95738;
+    border-color: rgb(224, 84, 56);
+    text-shadow: 0 -1px 1px rgb(212, 82, 56),1px 0 1px rgb(212, 82, 56),0 1px 1px rgb(212, 82, 56),-1px 0 1px rgb(212, 82, 56);
+    box-shadow: 0 1px 0 rgb(199, 80, 56);
+  }
+  
+  body.login .button-primary:hover,
+  body.login .button-primary:active,
+  body.login .button-primary:focus {
+    background-color: rgb(232, 85, 56);
+    border-color: rgb(212, 82, 56);
+    text-shadow: 0 -1px 1px rgb(199, 80, 56),1px 0 1px rgb(199, 80, 56),0 1px 1px rgb(199, 80, 56),-1px 0 1px rgb(199, 80, 56);
+    box-shadow: 0 1px 0 rgb(186, 78, 56);
+  }
+  
+  body.login {
+    background-color: #FAF0CA;
+  }
+  
+  .login h1 a {
+    color: #0D3B66;
+    font-size: 30px;
+    font-weight: 300;
+    background-image: none;
+    width: auto;
+    height: auto;
+    text-indent: 0;
+  }
+  
+/* Slideshow-logo -------------------------------------- */
+#slideshow.slick-slider img{
+  -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+  filter: grayscale(100%);
+  -webkit-transition: filter 0.3s; /* Safari prior 6.1 */
+  transition: filter 0.3s;
+}
+#slideshow.slick-slider img:hover{
+  -webkit-filter: grayscale(0%); /* Safari 6.0 - 9.0 */
+  filter: grayscale(0%);
+}
+.slick-arrow{
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  bottom: 0;
+  height: 20px;
+  width: 30px;
+  margin:20px;
+  border: none;
+  background-image: url("images/arrow.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  background-color: transparent !important;
+  border: none !important;
+}
+.slick-next{
+  right: 0;
+}
+.slick-previous{
+  left: 0;
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+}
+.slick-initialized {
+  visibility: visible !important;
+}
