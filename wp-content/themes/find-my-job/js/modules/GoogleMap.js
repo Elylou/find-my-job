@@ -100,3 +100,78 @@ class GMap {
 }
 
 export default GMap;
+
+var btn = $('#button');
+
+$(window).scroll(function() {
+  if ($(window).scrollTop() > 300) {
+    btn.addClass('show');
+  } else {
+    btn.removeClass('show');
+  }
+});
+
+btn.on('click', function(e) {
+  e.preventDefault();
+  $('html, body').animate({scrollTop:0}, '300');
+});
+
+Js 
+
+(function ($) {
+    $(document).ready(function() {
+
+        // SCROLL MENU
+        $('.page-template-page-homepage main').addClass('scroll');
+        $('.page-template-page-homepage #site-header > .navbar').addClass('scroll');
+        $(window).scroll( function(){
+            var $height = $(window).scrollTop();
+            if( $height > 50 ) {
+                $('.page-template-page-homepage #site-header > .navbar').removeClass('scroll');
+            } else {
+                $('.page-template-page-homepage #site-header > .navbar').addClass('scroll');
+            }
+        });
+
+
+
+        // SLICK SLIDESHOW HOME
+        $('#slideshow').slick({
+            dots: false,
+            infinite: true,
+            speed: 500,
+            autoplay: true,
+            autoplaySpeed: 2000,
+            slidesToShow: 6,
+            slidesToScroll: 1,
+            // centerMode: true,
+            focusOnSelect: true,
+            prevArrow: '<button type="button" class="slick-previous"></button>',
+            nextArrow: '<button type="button" class="slick-next"></button>',
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 4,
+                        slidesToScroll: 1,
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 1
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 1
+                    }
+                }
+                // You can unslick at a given breakpoint now by adding:
+                // settings: "unslick"
+                // instead of a settings object
+            ]
+        });

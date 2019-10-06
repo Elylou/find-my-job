@@ -1,30 +1,26 @@
-<?php get_header(); ?>
+<?php
 
-    
-<div class="page-banner">
-    <div class="page-banner__bg-image" style="background-image: url(<?php echo get_theme_file_uri('/images/ocean.jpg') ?>);"></div>
-    <div class="page-banner__content container container--narrow">
-      <h1 class="page-banner__title">Bienvenue sur les news!!</h1>
-      <div class="page-banner__intro">
-        <p>Ne perdez pas une miette d'actu !</p>
-      </div>
-    </div>  
-  </div>
+  get_header();
+  pageBanner (array(
+    'title' => 'Bienvenue sur notre blog',
+    'subtitle' => 'Découvrez nos plus belles news'
+  ));?>
 
-  <div class="container container--narrow page-section">
+
+<div class="container container--narrow page-section">
 <?php
   while(have_posts()) {
     the_post(); ?>
     <div class="post-item">
       <h2 class="headline headline--medium headline--post-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
-      
       <div class="metabox">
-        <p>Posté par <?php the_author_posts_link(); ?> le <?php the_time(' j F Y'); ?> dans <?php echo get_the_category_list(', '); ?></p>
+        <p>Publié par <?php the_author_posts_link(); ?> le <?php the_time('l j F Y'); ?> dans <?php echo get_the_category_list(', '); ?></p>
       </div>
+
 
       <div class="generic-content">
         <?php the_excerpt(); ?>
-        <p><a class="btn btn--blue" href="<?php the_permalink(); ?>">Lire plus &raquo;</a></p>
+        <p><a class="btn btn--blue" href="<?php the_permalink(); ?>">Lire la suite &raquo;</a></p>
       </div>
 
     </div>
@@ -33,5 +29,7 @@
 ?>
 </div>
 
+<?php get_footer();
 
-<?php get_footer(); ?>
+?>
+

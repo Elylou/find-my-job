@@ -6,9 +6,9 @@
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10347,6 +10347,130 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var GMap = function () {
+  function GMap() {
+    _classCallCheck(this, GMap);
+
+    var self = this;
+    (0, _jquery2.default)('.acf-map').each(function () {
+      self.new_map((0, _jquery2.default)(this));
+    });
+  } // end constructor
+
+  _createClass(GMap, [{
+    key: 'new_map',
+    value: function new_map($el) {
+
+      // var
+      var $markers = $el.find('.marker');
+
+      // vars
+      var args = {
+        zoom: 16,
+        center: new google.maps.LatLng(0, 0),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+
+      // create map
+      var map = new google.maps.Map($el[0], args);
+
+      // add a markers reference
+      map.markers = [];
+
+      var that = this;
+
+      // add markers
+      $markers.each(function () {
+        that.add_marker((0, _jquery2.default)(this), map);
+      });
+
+      // center map
+      this.center_map(map);
+    } // end new_map
+
+  }, {
+    key: 'add_marker',
+    value: function add_marker($marker, map) {
+
+      // var
+      var latlng = new google.maps.LatLng($marker.attr('data-lat'), $marker.attr('data-lng'));
+
+      var marker = new google.maps.Marker({
+        position: latlng,
+        map: map
+      });
+
+      map.markers.push(marker);
+
+      // if marker contains HTML, add it to an infoWindow
+      if ($marker.html()) {
+        // create info window
+        var infowindow = new google.maps.InfoWindow({
+          content: $marker.html()
+        });
+
+        // show info window when marker is clicked
+        google.maps.event.addListener(marker, 'click', function () {
+
+          infowindow.open(map, marker);
+        });
+      }
+    } // end add_marker
+
+  }, {
+    key: 'center_map',
+    value: function center_map(map) {
+
+      // vars
+      var bounds = new google.maps.LatLngBounds();
+
+      // loop through all markers and create bounds
+      _jquery2.default.each(map.markers, function (i, marker) {
+
+        var latlng = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
+
+        bounds.extend(latlng);
+      });
+
+      // only 1 marker?
+      if (map.markers.length == 1) {
+        // set center of map
+        map.setCenter(bounds.getCenter());
+        map.setZoom(16);
+      } else {
+        // fit to bounds
+        map.fitBounds(bounds);
+      }
+    } // end center_map
+
+  }]);
+
+  return GMap;
+}();
+
+exports.default = GMap;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var HeroSlider = function () {
   function HeroSlider() {
     _classCallCheck(this, HeroSlider);
@@ -10372,7 +10496,107 @@ var HeroSlider = function () {
 exports.default = HeroSlider;
 
 /***/ }),
-/* 2 */
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Like = function () {
+  function Like() {
+    _classCallCheck(this, Like);
+
+    this.events();
+  }
+
+  _createClass(Like, [{
+    key: "events",
+    value: function events() {
+      (0, _jquery2.default)(".like-box").on("click", this.ourClickDispatcher.bind(this));
+    }
+
+    // methods
+
+  }, {
+    key: "ourClickDispatcher",
+    value: function ourClickDispatcher(e) {
+      var currentLikeBox = (0, _jquery2.default)(e.target).closest(".like-box");
+
+      if (currentLikeBox.attr('data-exists') == 'yes') {
+        this.deleteLike(currentLikeBox);
+      } else {
+        this.createLike(currentLikeBox);
+      }
+    }
+  }, {
+    key: "createLike",
+    value: function createLike(currentLikeBox) {
+      _jquery2.default.ajax({
+        beforeSend: function beforeSend(xhr) {
+          xhr.setRequestHeader('X-WP-Nonce', universityData.nonce);
+        },
+        url: universityData.root_url + '/wp-json/university/v1/manageLike',
+        type: 'POST',
+        data: { 'professorId': currentLikeBox.data('professor') },
+        success: function success(response) {
+          currentLikeBox.attr('data-exists', 'yes');
+          var likeCount = parseInt(currentLikeBox.find(".like-count").html(), 10);
+          likeCount++;
+          currentLikeBox.find(".like-count").html(likeCount);
+          currentLikeBox.attr("data-like", response);
+          console.log(response);
+        },
+        error: function error(response) {
+          console.log(response);
+        }
+      });
+    }
+  }, {
+    key: "deleteLike",
+    value: function deleteLike(currentLikeBox) {
+      _jquery2.default.ajax({
+        beforeSend: function beforeSend(xhr) {
+          xhr.setRequestHeader('X-WP-Nonce', universityData.nonce);
+        },
+        url: universityData.root_url + '/wp-json/university/v1/manageLike',
+        data: { 'like': currentLikeBox.attr('data-like') },
+        type: 'DELETE',
+        success: function success(response) {
+          currentLikeBox.attr('data-exists', 'no');
+          var likeCount = parseInt(currentLikeBox.find(".like-count").html(), 10);
+          likeCount--;
+          currentLikeBox.find(".like-count").html(likeCount);
+          currentLikeBox.attr("data-like", '');
+          console.log(response);
+        },
+        error: function error(response) {
+          console.log(response);
+        }
+      });
+    }
+  }]);
+
+  return Like;
+}();
+
+exports.default = Like;
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10420,7 +10644,305 @@ var MobileMenu = function () {
 exports.default = MobileMenu;
 
 /***/ }),
-/* 3 */
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var MyNotes = function () {
+  function MyNotes() {
+    _classCallCheck(this, MyNotes);
+
+    this.events();
+  }
+
+  _createClass(MyNotes, [{
+    key: "events",
+    value: function events() {
+      (0, _jquery2.default)("#my-notes").on("click", ".delete-note", this.deleteNote);
+      (0, _jquery2.default)("#my-notes").on("click", ".edit-note", this.editNote.bind(this));
+      (0, _jquery2.default)("#my-notes").on("click", ".update-note", this.updateNote.bind(this));
+      (0, _jquery2.default)(".submit-note").on("click", this.createNote.bind(this));
+    }
+
+    // Methods will go here
+
+  }, {
+    key: "editNote",
+    value: function editNote(e) {
+      var thisNote = (0, _jquery2.default)(e.target).parents("li");
+      if (thisNote.data("state") == "editable") {
+        this.makeNoteReadOnly(thisNote);
+      } else {
+        this.makeNoteEditable(thisNote);
+      }
+    }
+  }, {
+    key: "makeNoteEditable",
+    value: function makeNoteEditable(thisNote) {
+      thisNote.find(".edit-note").html('<i class="fa fa-times" aria-hidden="true"></i> Cancel');
+      thisNote.find(".note-title-field, .note-body-field").removeAttr("readonly").addClass("note-active-field");
+      thisNote.find(".update-note").addClass("update-note--visible");
+      thisNote.data("state", "editable");
+    }
+  }, {
+    key: "makeNoteReadOnly",
+    value: function makeNoteReadOnly(thisNote) {
+      thisNote.find(".edit-note").html('<i class="fa fa-pencil" aria-hidden="true"></i> Edit');
+      thisNote.find(".note-title-field, .note-body-field").attr("readonly", "readonly").removeClass("note-active-field");
+      thisNote.find(".update-note").removeClass("update-note--visible");
+      thisNote.data("state", "cancel");
+    }
+  }, {
+    key: "deleteNote",
+    value: function deleteNote(e) {
+      var thisNote = (0, _jquery2.default)(e.target).parents("li");
+
+      _jquery2.default.ajax({
+        beforeSend: function beforeSend(xhr) {
+          xhr.setRequestHeader('X-WP-Nonce', universityData.nonce);
+        },
+        url: universityData.root_url + '/wp-json/wp/v2/note/' + thisNote.data('id'),
+        type: 'DELETE',
+        success: function success(response) {
+          thisNote.slideUp();
+          console.log("Congrats");
+          console.log(response);
+          if (response.userNoteCount < 5) {
+            (0, _jquery2.default)(".note-limit-message").removeClass("active");
+          }
+        },
+        error: function error(response) {
+          console.log("Sorry");
+          console.log(response);
+        }
+      });
+    }
+  }, {
+    key: "updateNote",
+    value: function updateNote(e) {
+      var _this = this;
+
+      var thisNote = (0, _jquery2.default)(e.target).parents("li");
+
+      var ourUpdatedPost = {
+        'title': thisNote.find(".note-title-field").val(),
+        'content': thisNote.find(".note-body-field").val()
+      };
+
+      _jquery2.default.ajax({
+        beforeSend: function beforeSend(xhr) {
+          xhr.setRequestHeader('X-WP-Nonce', universityData.nonce);
+        },
+        url: universityData.root_url + '/wp-json/wp/v2/note/' + thisNote.data('id'),
+        type: 'POST',
+        data: ourUpdatedPost,
+        success: function success(response) {
+          _this.makeNoteReadOnly(thisNote);
+          console.log("Congrats");
+          console.log(response);
+        },
+        error: function error(response) {
+          console.log("Sorry");
+          console.log(response);
+        }
+      });
+    }
+  }, {
+    key: "createNote",
+    value: function createNote(e) {
+      var ourNewPost = {
+        'title': (0, _jquery2.default)(".new-note-title").val(),
+        'content': (0, _jquery2.default)(".new-note-body").val(),
+        'status': 'publish'
+      };
+
+      _jquery2.default.ajax({
+        beforeSend: function beforeSend(xhr) {
+          xhr.setRequestHeader('X-WP-Nonce', universityData.nonce);
+        },
+        url: universityData.root_url + '/wp-json/wp/v2/note/',
+        type: 'POST',
+        data: ourNewPost,
+        success: function success(response) {
+          (0, _jquery2.default)(".new-note-title, .new-note-body").val('');
+          (0, _jquery2.default)("\n          <li data-id=\"" + response.id + "\">\n            <input readonly class=\"note-title-field\" value=\"" + response.title.raw + "\">\n            <span class=\"edit-note\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i> Edit</span>\n            <span class=\"delete-note\"><i class=\"fa fa-trash-o\" aria-hidden=\"true\"></i> Delete</span>\n            <textarea readonly class=\"note-body-field\">" + response.content.raw + "</textarea>\n            <span class=\"update-note btn btn--blue btn--small\"><i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i> Save</span>\n          </li>\n          ").prependTo("#my-notes").hide().slideDown();
+
+          console.log("Congrats");
+          console.log(response);
+        },
+        error: function error(response) {
+          if (response.responseText == "You have reached your note limit.") {
+            (0, _jquery2.default)(".note-limit-message").addClass("active");
+          }
+          console.log("Sorry");
+          console.log(response);
+        }
+      });
+    }
+  }]);
+
+  return MyNotes;
+}();
+
+exports.default = MyNotes;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Search = function () {
+  // 1. describe and create/initiate our object
+  function Search() {
+    _classCallCheck(this, Search);
+
+    this.addSearchHTML();
+    this.resultsDiv = (0, _jquery2.default)("#search-overlay__results");
+    this.openButton = (0, _jquery2.default)(".js-search-trigger");
+    this.closeButton = (0, _jquery2.default)(".search-overlay__close");
+    this.searchOverlay = (0, _jquery2.default)(".search-overlay");
+    this.searchField = (0, _jquery2.default)("#search-term");
+    this.events();
+    this.isOverlayOpen = false;
+    this.isSpinnerVisible = false;
+    this.previousValue;
+    this.typingTimer;
+  }
+
+  // 2. events
+
+
+  _createClass(Search, [{
+    key: "events",
+    value: function events() {
+      this.openButton.on("click", this.openOverlay.bind(this));
+      this.closeButton.on("click", this.closeOverlay.bind(this));
+      (0, _jquery2.default)(document).on("keydown", this.keyPressDispatcher.bind(this));
+      this.searchField.on("keyup", this.typingLogic.bind(this));
+    }
+
+    // 3. methods (function, action...)
+
+  }, {
+    key: "typingLogic",
+    value: function typingLogic() {
+      if (this.searchField.val() != this.previousValue) {
+        clearTimeout(this.typingTimer);
+
+        if (this.searchField.val()) {
+          if (!this.isSpinnerVisible) {
+            this.resultsDiv.html('<div class="spinner-loader"></div>');
+            this.isSpinnerVisible = true;
+          }
+          this.typingTimer = setTimeout(this.getResults.bind(this), 750);
+        } else {
+          this.resultsDiv.html('');
+          this.isSpinnerVisible = false;
+        }
+      }
+
+      this.previousValue = this.searchField.val();
+    }
+  }, {
+    key: "getResults",
+    value: function getResults() {
+      var _this = this;
+
+      _jquery2.default.getJSON(universityData.root_url + '/wp-json/university/v1/search?term=' + this.searchField.val(), function (results) {
+        _this.resultsDiv.html("\n        <div class=\"row\">\n          <div class=\"one-third\">\n            <h2 class=\"search-overlay__section-title\">Informations générales</h2>\n            " + (results.generalInfo.length ? '<ul class="link-list min-list">' : '<p>Aucune information</p>') + "\n              " + results.generalInfo.map(function (item) {
+          return "<li><a href=\"" + item.permalink + "\">" + item.title + "</a> " + (item.postType == 'post' ? "by " + item.authorName : '') + "</li>";
+        }).join('') + "\n            " + (results.generalInfo.length ? '</ul>' : '') + "\n          </div>\n          <div class=\"one-third\">\n            <h2 class=\"search-overlay__section-title\">Programmes</h2>\n            " + (results.programs.length ? '<ul class="link-list min-list">' : "<p> Aucun programme <a href=\"" + universityData.root_url + "/programs\">Voir tous les programmes</a></p>") + "\n              " + results.programs.map(function (item) {
+          return "<li><a href=\"" + item.permalink + "\">" + item.title + "</a></li>";
+        }).join('') + "\n            " + (results.programs.length ? '</ul>' : '') + "\n\n            <h2 class=\"search-overlay__section-title\">Professeur</h2>\n            " + (results.professors.length ? '<ul class="professor-cards">' : "<p>Aucun professeur</p>") + "\n              " + results.professors.map(function (item) {
+          return "\n                <li class=\"professor-card__list-item\">\n                  <a class=\"professor-card\" href=\"" + item.permalink + "\">\n                    <img class=\"professor-card__image\" src=\"" + item.image + "\">\n                    <span class=\"professor-card__name\">" + item.title + "</span>\n                  </a>\n                </li>\n              ";
+        }).join('') + "\n            " + (results.professors.length ? '</ul>' : '') + "\n\n          </div>\n          <div class=\"one-third\">\n            <h2 class=\"search-overlay__section-title\">Centre de formation</h2>\n            " + (results.campuses.length ? '<ul class="link-list min-list">' : "<p> Aucun centre de foramtion <a href=\"" + universityData.root_url + "/campuses\">Voir tous les centres</a></p>") + "\n              " + results.campuses.map(function (item) {
+          return "<li><a href=\"" + item.permalink + "\">" + item.title + "</a></li>";
+        }).join('') + "\n            " + (results.campuses.length ? '</ul>' : '') + "\n\n            <h2 class=\"search-overlay__section-title\">Events</h2>\n            " + (results.events.length ? '' : "<p>Aucun événements trouvés<a href=\"" + universityData.root_url + "/events\">Voir tous les événements</a></p>") + "\n              " + results.events.map(function (item) {
+          return "\n                <div class=\"event-summary\">\n                  <a class=\"event-summary__date t-center\" href=\"" + item.permalink + "\">\n                    <span class=\"event-summary__month\">" + item.month + "</span>\n                    <span class=\"event-summary__day\">" + item.day + "</span>  \n                  </a>\n                  <div class=\"event-summary__content\">\n                    <h5 class=\"event-summary__title headline headline--tiny\"><a href=\"" + item.permalink + "\">" + item.title + "</a></h5>\n                    <p>" + item.description + " <a href=\"" + item.permalink + "\" class=\"nu gray\">Voir plus</a></p>\n                  </div>\n                </div>\n              ";
+        }).join('') + "\n\n          </div>\n        </div>\n      ");
+        _this.isSpinnerVisible = false;
+      });
+    }
+  }, {
+    key: "keyPressDispatcher",
+    value: function keyPressDispatcher(e) {
+      if (e.keyCode == 83 && !this.isOverlayOpen && !(0, _jquery2.default)("input, textarea").is(':focus')) {
+        this.openOverlay();
+      }
+
+      if (e.keyCode == 27 && this.isOverlayOpen) {
+        this.closeOverlay();
+      }
+    }
+  }, {
+    key: "openOverlay",
+    value: function openOverlay() {
+      var _this2 = this;
+
+      this.searchOverlay.addClass("search-overlay--active");
+      (0, _jquery2.default)("body").addClass("body-no-scroll");
+      this.searchField.val('');
+      setTimeout(function () {
+        return _this2.searchField.focus();
+      }, 301);
+      console.log("our open method just ran!");
+      this.isOverlayOpen = true;
+      return false;
+    }
+  }, {
+    key: "closeOverlay",
+    value: function closeOverlay() {
+      this.searchOverlay.removeClass("search-overlay--active");
+      (0, _jquery2.default)("body").removeClass("body-no-scroll");
+      console.log("our close method just ran!");
+      this.isOverlayOpen = false;
+    }
+  }, {
+    key: "addSearchHTML",
+    value: function addSearchHTML() {
+      (0, _jquery2.default)("body").append("\n      <div class=\"search-overlay\">\n        <div class=\"search-overlay__top\">\n          <div class=\"container\">\n            <i class=\"fa fa-search search-overlay__icon\" aria-hidden=\"true\"></i>\n            <input type=\"text\" class=\"search-term\" placeholder=\"Que recherchez vous?\" id=\"search-term\">\n            <i class=\"fa fa-window-close search-overlay__close\" aria-hidden=\"true\"></i>\n          </div>\n        </div>\n        \n        <div class=\"container\">\n          <div id=\"search-overlay__results\"></div>\n        </div>\n\n      </div>\n    ");
+    }
+  }]);
+
+  return Search;
+}();
+
+exports.default = Search;
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -13321,7 +13843,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 4 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13331,17 +13853,33 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _slickCarousel = __webpack_require__(3);
+var _slickCarousel = __webpack_require__(7);
 
 var _slickCarousel2 = _interopRequireDefault(_slickCarousel);
 
-var _MobileMenu = __webpack_require__(2);
+var _MobileMenu = __webpack_require__(4);
 
 var _MobileMenu2 = _interopRequireDefault(_MobileMenu);
 
-var _HeroSlider = __webpack_require__(1);
+var _HeroSlider = __webpack_require__(2);
 
 var _HeroSlider2 = _interopRequireDefault(_HeroSlider);
+
+var _GoogleMap = __webpack_require__(1);
+
+var _GoogleMap2 = _interopRequireDefault(_GoogleMap);
+
+var _Search = __webpack_require__(6);
+
+var _Search2 = _interopRequireDefault(_Search);
+
+var _MyNotes = __webpack_require__(5);
+
+var _MyNotes2 = _interopRequireDefault(_MyNotes);
+
+var _Like = __webpack_require__(3);
+
+var _Like2 = _interopRequireDefault(_Like);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -13352,6 +13890,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // 3rd party packages from NPM
 var mobileMenu = new _MobileMenu2.default();
 var heroSlider = new _HeroSlider2.default();
+var googleMap = new _GoogleMap2.default();
+var search = new _Search2.default();
+var mynotes = new _MyNotes2.default();
+var like = new _Like2.default();
 
 /***/ })
 /******/ ]);
